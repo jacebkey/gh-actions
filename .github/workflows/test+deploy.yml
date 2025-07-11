@@ -49,7 +49,7 @@ jobs:
           message: "Tests have completed"
 
   deploy:
-    needs: test
+    needs: [test, snyk]
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
