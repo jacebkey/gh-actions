@@ -46,9 +46,9 @@ jobs:
                 node-version: 18
             - name: install dependencies
               run: npm ci
-              working-directory: "02 Starting Project"
+              working-directory: "Starting-Project"
             - name: Build project
               run: npm run build
-              working-directory: "02 Starting Project"
+              working-directory: "Starting-Project"
             - name: Deploy
               run: echo "Deploying"
