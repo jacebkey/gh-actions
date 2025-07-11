@@ -25,13 +25,6 @@ jobs:
         run: npm test
         working-directory: "Starting-Project"
 
-      - name: Call public API and echo result
-        run: |
-          response=$(curl -s "https://api.agify.io?name=michael")
-          echo "API response: $response"
-          age=$(echo "$response" | grep -o '"age":[0-9]*' | grep -o '[0-9]*')
-          echo "Predicted age for Michael: $age"
-
   snyk:
     needs: test
     runs-on: ubuntu-latest
