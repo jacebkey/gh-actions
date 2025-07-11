@@ -28,10 +28,10 @@ jobs:
 
       - name: Call public API and echo result
         run: |
-          response=$(curl -s "https://api.agify.io?name=michael")
+          response=$(curl -s "https://www.boredapi.com/api/activity")
           echo "API response: $response"
-          age=$(echo "$response" | grep -o '"age":[0-9]*' | grep -o '[0-9]*')
-          echo "Predicted age for Michael: $age"
+          activity=$(echo "$response" | grep -o '"activity":"[^"]*"' | cut -d':' -f2- | tr -d '"')
+          echo "Suggested activity: $activity"
 
   snyk:
     needs: test
