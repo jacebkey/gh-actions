@@ -28,10 +28,10 @@ jobs:
 
       - name: Call public API and echo result
         run: |
-          response=$(curl -s "https://www.boredapi.com/api/activity")
+          response=$(curl -s "https://dog.ceo/api/breeds/image/random")
           echo "API response: $response"
-          activity=$(echo "$response" | grep -o '"activity":"[^"]*"' | cut -d':' -f2- | tr -d '"')
-          echo "Suggested activity: $activity"
+          image=$(echo "$response" | grep -o '"message":"[^\"]*"' | cut -d':' -f2- | tr -d '"')
+          echo "Random dog image URL: $image"
 
   snyk:
     needs: test
