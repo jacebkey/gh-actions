@@ -1,6 +1,6 @@
 name: Test and Deploy Project
 on: [pull_request, workflow_dispatch]
-permissions:  # added using https://github.com/step-security/secure-repo
+permissions:
   contents: read
 
 jobs:
