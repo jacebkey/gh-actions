@@ -20,10 +20,10 @@ jobs:
                 node-version: 18
             - name: install dependencies
               run: npm ci
-              working-directory: "02 Starting Project"
+              working-directory: "Starting-Project"
             - name: run tests
               run: npm test
-              working-directory: "02 Starting Project"
+              working-directory: "Starting-Project"
             - name: comment
               uses: mshick/add-pr-comment@v2
               with:
