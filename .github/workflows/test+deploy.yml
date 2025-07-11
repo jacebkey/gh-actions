@@ -24,6 +24,11 @@ jobs:
             - name: run tests
               run: npm test
               working-directory: "Starting-Project"
+            - name: Snyk test
+              uses: snyk/actions/node@master
+              continue-on-error: true
+              env:
+                SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
             - name: comment
               uses: mshick/add-pr-comment@v2
               with:
