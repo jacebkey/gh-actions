@@ -24,6 +24,11 @@ jobs:
             - name: run tests
               run: npm test
               working-directory: "02 Starting Project"
+            - name: comment
+              uses: mshick/add-pr-comment@v2
+              with:
+                message: "Tests have completed"
+
     deploy:
         needs: test
         runs-on: ubuntu-latest
