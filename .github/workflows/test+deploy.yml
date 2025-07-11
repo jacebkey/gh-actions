@@ -1,59 +1,66 @@
 name: Test and Deploy Project
 on: [push, pull_request, workflow_dispatch]
-permissions:  # added using https://github.com/step-security/secure-repo
+permissions:
   contents: read
-  pull-requests: write
+
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Harden the runner (Audit all outbound calls)
-              uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
-              with:
-                egress-policy: audit
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
 
-            - name: Get Code
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-            - name: setup node
-              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-              with:
-                node-version: 18
-            - name: install dependencies
-              run: npm ci
-              working-directory: "Starting-Project"
-            - name: run tests
-              run: npm test
-              working-directory: "Starting-Project"
-            - name: Snyk test
-              uses: snyk/actions/node@master
-              continue-on-error: true
-              env:
-                SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-            - name: comment
-              uses: mshick/add-pr-comment@v2
-              with:
-                message: "Tests have completed"
+      - name: Get Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: setup node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 18
+      - name: install dependencies
+        run: npm ci
+        working-directory: "Starting-Project"
+      - name: run tests
+        run: npm test
+        working-directory: "Starting-Project"
+      - name: Snyk test
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-    deploy:
-        needs: test
-        runs-on: ubuntu-latest
-        steps:
-            - name: Harden the runner (Audit all outbound calls)
-              uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
-              with:
-                egress-policy: audit
+  pr-comment:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: PR Comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: "Tests have completed"
 
-            - name: Get Code
-              uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-            - name: setup node
-              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-              with:
-                node-version: 18
-            - name: install dependencies
-              run: npm ci
-              working-directory: "Starting-Project"
-            - name: Build project
-              run: npm run build
-              working-directory: "Starting-Project"
-            - name: Deploy
-              run: echo "Deploying"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Get Code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: setup node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 18
+      - name: install dependencies
+        run: npm ci
+        working-directory: "Starting-Project"
+      - name: Build project
+        run: npm run build
+        working-directory: "Starting-Project"
+      - name: Deploy
+        run: echo "Deploying"
