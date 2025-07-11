@@ -24,14 +24,21 @@ jobs:
       - name: run tests
         run: npm test
         working-directory: "Starting-Project"
+
+  snyk:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - name: Snyk test
         uses: snyk/actions/node@master
+        with:
+          args: --all-projects
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   pr-comment:
-    needs: test
+    needs: [test, snyk]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
